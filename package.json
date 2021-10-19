@@ -1,0 +1,24 @@
+{
+  "name": "testing-puppeteer",
+  "version": "1.0.0",
+  "description": "a quick repo to test puppeteer library",
+  "main": "index.js",
+  "dependencies": {
+    "puppeteer": "^10.4.0",
+    "puppeteer-core": "^10.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oliviapycz/testing-puppeteer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oliviapycz/testing-puppeteer/issues"
+  },
+  "homepage": "https://github.com/oliviapycz/testing-puppeteer#readme"
+}
