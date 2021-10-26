@@ -2,32 +2,44 @@ const puppeteer = require('puppeteer');
 const fs = require('fs')
 const {URL_TO_SCRAPE} = require('./constant')
 
-let scrape = async () => {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto(URL_TO_SCRAPE);
+const getAllUrlForOneLetter = async browser => {
+  const page = await browser.newPage()
+  await page.goto(URL_TO_SCRAPE)
+  await page.waitFor('body')
+  const result = await page.evaluate(() =>
+    [...document.querySelectorAll('nav.af-pagination> ul > li > a')].map(link => link.href),
+  )
+  return result
+}
   
-  
-  const ingredientList = await page.evaluate(() => {
-
-    const list = document.querySelectorAll('div.index-item-card > a')
+const getDataFromUrl = async (browser, url) => {
+  const page = await browser.newPage()
+  await page.goto(url)
+  await page.waitFor('body')
+  return page.evaluate(() => {
     let data = []
+      
+    const list = document.querySelectorAll('div.index-item-card > a')
     list.forEach(element => {
       data.push({
         title: element.innerText,
         imageUrl: element.children[0].getAttribute('src'),
       })
-      
     });  
     return data;
-    })
-    
-  
+  })
+}
 
-  
-  await browser.close();
-  return ingredientList;
-};
+const scrape = async () => {
+  const browser = await puppeteer.launch({ headless: false })
+  const urlList = await getAllUrlForOneLetter(browser)
+  const results = await Promise.all(
+    urlList.map(url => getDataFromUrl(browser, url)),
+  )
+  browser.close()
+  return results
+}
+
 
 scrape().then((value) => {
   fs.writeFile(
